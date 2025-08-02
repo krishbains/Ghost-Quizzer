@@ -50,7 +50,7 @@ interface TopicBubbleSelectorProps {
   isDemo?: boolean;
 }
 
-const FPS_LIMIT = 240;
+const FPS_LIMIT = 120;
 
 const Bubble = ({ bodyId, topic, radius, color, isSelected, onSelect, bodiesRef }: BubbleProps) => {
   const x = useMotionValue(0);
@@ -247,59 +247,57 @@ export default function TopicBubbleSelector({ isOpen, onClose, isHost, isDemo }:
     );
   }
 
-  // Regular mode: Render with modal
+  // Regular mode: Render content only (modal wrapper handled by parent)
   return (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-3xl rounded-3xl p-8 max-w-4xl max-h-[90vh] overflow-hidden border border-white/20 shadow-2xl">
-        {isHost && (
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl font-bold z-10 hover:scale-110 transition-transform"
-          >
-            ×
-          </button>
-        )}
-        
-        <div className="w-full flex flex-col items-center">
-          <div
-            className="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/10"
-            style={{
-              width: `${baseWidth}px`,
-              height: `${baseHeight}px`
-            }}
-          >
-            {bubbles.map(bubble => (
-              <Bubble
-                key={bubble.id}
-                bodyId={bubble.id}
-                topic={bubble.topic}
-                radius={bubble.radius}
-                color={bubble.color}
-                isSelected={selectedBubbleId === bubble.id}
-                onSelect={() => handleSelect(bubble.id)}
-                bodiesRef={bodiesRef}
-              />
-            ))}
-          </div>
-          {!isDemo && (
-            <div className="flex gap-3 mt-5" style={{ width: `${baseWidth}px` }}>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && addBubble()}
-                placeholder="Enter a topic"
-                className="flex-grow px-4 py-2 text-base bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-              />
-              <button
-                onClick={addBubble}
-                className="px-5 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 text-white rounded-lg hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300"
-              >
-                Add
-              </button>
-            </div>
-          )}
+    <div className="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-3xl rounded-3xl p-8 max-w-4xl max-h-[90vh] overflow-hidden border border-white/20 shadow-2xl">
+      {isHost && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl font-bold z-10 hover:scale-110 transition-transform"
+        >
+          ×
+        </button>
+      )}
+      
+      <div className="w-full flex flex-col items-center">
+        <div
+          className="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/10"
+          style={{
+            width: `${baseWidth}px`,
+            height: `${baseHeight}px`
+          }}
+        >
+          {bubbles.map(bubble => (
+            <Bubble
+              key={bubble.id}
+              bodyId={bubble.id}
+              topic={bubble.topic}
+              radius={bubble.radius}
+              color={bubble.color}
+              isSelected={selectedBubbleId === bubble.id}
+              onSelect={() => handleSelect(bubble.id)}
+              bodiesRef={bodiesRef}
+            />
+          ))}
         </div>
+        {!isDemo && (
+          <div className="flex gap-3 mt-5" style={{ width: `${baseWidth}px` }}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addBubble()}
+              placeholder="Enter a topic"
+              className="flex-grow px-4 py-2 text-base bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            />
+            <button
+              onClick={addBubble}
+              className="px-5 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 text-white rounded-lg hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300"
+            >
+              Add
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -113,67 +113,65 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[rgba(15,23,42,0.7)] flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Ask AI for Quiz Topic</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-          >
-            ×
-          </button>
+    <div className="bg-white rounded-lg p-6 w-96 max-w-[90vw]">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Ask AI for Quiz Topic</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+        >
+          ×
+        </button>
+      </div>
+      
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
+            Enter a topic for AI-generated quiz:
+          </label>
+          <input
+            id="topic"
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="e.g., Ancient Egypt, Space Exploration, Cooking..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            autoFocus
+            disabled={isLoading}
+          />
         </div>
         
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
-              Enter a topic for AI-generated quiz:
-            </label>
-            <input
-              id="topic"
-              type="text"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g., Ancient Egypt, Space Exploration, Cooking..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              autoFocus
-              disabled={isLoading}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="extraInstructions" className="block text-sm font-medium text-gray-700 mb-2">
-              Extra Instructions (optional):
-            </label>
-            <textarea
-              id="extraInstructions"
-              value={extraInstructions}
-              onChange={(e) => setExtraInstructions(e.target.value)}
-              placeholder="e.g., Make questions easy, focus on modern history, include fun facts..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              rows={3}
-              disabled={isLoading}
-            />
-          </div>
-          
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              disabled={isLoading}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!topic.trim() || isLoading}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-            >
-              {isLoading ? 'Generating...' : 'Generate Quiz'}
-            </button>
-          </div>
+        <div>
+          <label htmlFor="extraInstructions" className="block text-sm font-medium text-gray-700 mb-2">
+            Extra Instructions (optional):
+          </label>
+          <textarea
+            id="extraInstructions"
+            value={extraInstructions}
+            onChange={(e) => setExtraInstructions(e.target.value)}
+            placeholder="e.g., Make questions easy, focus on modern history, include fun facts..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            rows={3}
+            disabled={isLoading}
+          />
+        </div>
+        
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            disabled={isLoading}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={!topic.trim() || isLoading}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          >
+            {isLoading ? 'Generating...' : 'Generate Quiz'}
+          </button>
         </div>
       </div>
     </div>
