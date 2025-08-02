@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "socket-server": "ts-node src/server/socketServer.ts",
-    "build-server": "tsc src/server/socketServer.ts --outDir dist --target es2020 --module commonjs --esModuleInterop",
+    "build-server": "tsc --project tsconfig.server.json",
     "start-server": "node dist/server/socketServer.js",
     "render-start": "npm run build-server && npm run start-server"
   },
