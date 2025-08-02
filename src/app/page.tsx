@@ -66,7 +66,7 @@ export default function Home() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-12 py-8 sm:py-16">
         
         {/* HEADER WITH GLASSMORPHISM */}
-        <header className="text-center mb-12 sm:mb-20 w-full">
+        <header className="text-center mb-12 sm:mb-20 w-full max-w-4xl">
           <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 shadow-2xl animate-glow mx-4">
             <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-none tracking-tight mb-4 sm:mb-6 animate-shimmer">
               GhostQuizzer
