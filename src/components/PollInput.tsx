@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Matter, { Engine, World, Bodies, Body } from 'matter-js';
 import { motion, useMotionValue } from 'framer-motion';
 import clsx from 'clsx';
@@ -182,7 +182,7 @@ export default function TopicBubbleSelector({ isOpen, onClose, isHost, isDemo }:
     }
   }, [isDemo, isOpen]);
 
-  const addBubbleWithTopic = (topic: string) => {
+  const addBubbleWithTopic = useCallback((topic: string) => {
     if (!engineRef.current) return;
     const radius = Math.max(20, Math.min(100, 20 + 5 * topic.length)) * scale;
 
@@ -205,7 +205,7 @@ export default function TopicBubbleSelector({ isOpen, onClose, isHost, isDemo }:
     bodiesRef.current[body.id] = body;
 
     setBubbles(prev => [...prev, { id: body.id, topic, radius, color: getRandomColor() }]);
-  };
+  }, [scale, baseWidth, baseHeight]);
 
   const addBubble = () => {
     if (inputValue.trim() === '') return;

@@ -2,7 +2,6 @@
 import socket from '@/lib/socket'
 import React, { useEffect, useState, useRef } from 'react'
 import QuizBoard from './QuizBoard'
-import { Button } from './ui/button'
 import LeaderBoard from './LeaderBoard'
 import TopicBubbleSelector from './PollInput'
 import QuizTemplate from './QuizTemplate'
@@ -11,16 +10,30 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { IconCircle, IconTriangle, IconStar, IconUmbrella, IconTrophy, IconLogout2 } from '@tabler/icons-react'
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
 const GameRoom = ({roomCode, playerName, isHost}: {roomCode: string, playerName: string, isHost: boolean}) => {
     const router = useRouter()
     const [quizStarted, setQuizStarted] = useState(false)
     const [selectedQuizTitle, setSelectedQuizTitle] = useState<string>('')
-    const [selectedQuizData, setSelectedQuizData] = useState<any>(null)
+    const [selectedQuizData, setSelectedQuizData] = useState<QuizData | null>(null)
     const [showPollTopics, setShowPollTopics] = useState(false)
     const [showQuizTemplate, setShowQuizTemplate] = useState(false)
     const [showAskAI, setShowAskAI] = useState(false)
     const [showLeaderBoard, setShowLeaderBoard] = useState(false)
-    const [aiGeneratedQuiz, setAiGeneratedQuiz] = useState<any>(null)
+    const [aiGeneratedQuiz, setAiGeneratedQuiz] = useState<QuizData | null>(null)
     const hasJoined = useRef(false)
     
     useEffect(() => {
@@ -30,7 +43,7 @@ const GameRoom = ({roomCode, playerName, isHost}: {roomCode: string, playerName:
         hasJoined.current = true
       }
 
-      socket.on("user-joined", ({playerName, isHost, socketId})=>{
+      socket.on("user-joined", ({playerName, isHost})=>{
         console.log(`👋 ${playerName} (${isHost ? "host" : "player"}) joined`)
       })
 
@@ -48,7 +61,7 @@ const GameRoom = ({roomCode, playerName, isHost}: {roomCode: string, playerName:
         socket.off('user-joined')
         socket.off('quiz-started')
       }
-    }, []) // Empty dependency array to run only once
+    }, [roomCode, playerName, isHost]) // Added missing dependencies
 
     const handleStartQuiz = () => {
       if (selectedQuizData) {
@@ -62,13 +75,13 @@ const GameRoom = ({roomCode, playerName, isHost}: {roomCode: string, playerName:
       }
     }
 
-    const handleQuizTemplateSelect = (quizTitle: string, quizData: any) => {
+    const handleQuizTemplateSelect = (quizTitle: string, quizData: QuizData) => {
       setSelectedQuizTitle(quizTitle);
       setSelectedQuizData(quizData);
       console.log("Selected quiz:", quizTitle, quizData);
     }
 
-    const handleAskAISubmit = (quizData: any) => {
+    const handleAskAISubmit = (quizData: QuizData) => {
       console.log("AI quiz generated:", quizData);
       setAiGeneratedQuiz(quizData);
       // Automatically open quiz template to show the AI-generated quiz

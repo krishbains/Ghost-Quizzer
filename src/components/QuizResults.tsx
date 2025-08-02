@@ -2,6 +2,20 @@
 import React, { useState, useEffect } from 'react'
 import socket from '@/lib/socket'
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
 interface Player {
   playerId: string;
   name: string;
@@ -10,7 +24,7 @@ interface Player {
 }
 
 interface QuizResultsProps {
-  quizData: any;
+  quizData: QuizData;
   isHost: boolean;
   onExitQuiz?: () => void;
   players?: Player[];
@@ -103,11 +117,11 @@ const QuizResults = ({ quizData, isHost, onExitQuiz, players: propPlayers }: Qui
           <div className="mt-6 border-2 border-black p-4 rounded-lg bg-white">
             <h3 className="text-center font-bold mb-4">Quiz Review</h3>
             <div className="space-y-4">
-              {quizData.questions.map((question: any, index: number) => (
+              {quizData.questions.map((question, index: number) => (
                 <div key={index} className="border border-gray-300 p-4 rounded-lg">
                   <div className="font-semibold mb-2">Question {index + 1}: {question.text}</div>
                   <div className="space-y-1">
-                    {question.options.map((option: any) => (
+                    {question.options.map((option) => (
                       <div
                         key={option.id}
                         className={`p-2 rounded ${

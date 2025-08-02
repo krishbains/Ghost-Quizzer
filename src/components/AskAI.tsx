@@ -11,18 +11,31 @@ const ai = new GoogleGenAI({
   apiKey: apiKey || ''
 });
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
 interface AskAIProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (quizData: any) => void; // Changed to accept quiz data instead of just topic
+  onSubmit: (quizData: QuizData) => void;
 }
 
 const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
   const [topic, setTopic] = useState('');
-  const [extraInstructions, setExtraInstructions] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  async function AskGemini(prompt: string, topic: string, extraInstructions: string) {
+  async function AskGemini(prompt: string, topic: string) {
     try {
       if (!apiKey) {
         throw new Error('Google AI API key is not configured. Please add NEXT_PUBLIC_GOOGLE_AI_API_KEY to your .env.local file');
@@ -38,15 +51,15 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
       console.log('AI Response:', responseText);
       
       // Try to extract JSON from the response
-      let jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const jsonString = jsonMatch[0];
         try {
-          const quizData = JSON.parse(jsonString);
+          const quizData = JSON.parse(jsonString) as QuizData;
           console.log('Parsed quiz data:', quizData);
           
           // Generate a unique ID for the AI quiz
-          const aiQuizData = {
+          const aiQuizData: QuizData = {
             ...quizData,
             id: `ai_quiz_${Date.now()}`,
             title: quizData.title || `${topic} Quiz`
@@ -54,7 +67,6 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
           
           onSubmit(aiQuizData);
           setTopic('');
-          setExtraInstructions('');
           onClose();
         } catch (parseError) {
           console.error('Failed to parse JSON from AI response:', parseError);
@@ -71,7 +83,7 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
     }
   }
 
-  const prompt: string = `Generate a json '{}' object with the following structure. It must contain at least 10 multiple-choice questions about ${topic}. Follow these extra instructions: ${extraInstructions}. 
+  const prompt: string = `Generate a json '{}' object with the following structure. It must contain at least 10 multiple-choice questions about ${topic}. 
 
   The output must be valid Json and should not contain any explanations, markdown, comments, or extra text. Only output the Json object.
 
@@ -100,7 +112,7 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     if (topic.trim()) {
-      AskGemini(prompt, topic, extraInstructions);
+      AskGemini(prompt, topic);
     }
   };
 
@@ -138,21 +150,6 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
             placeholder="e.g., Ancient Egypt, Space Exploration, Cooking..."
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             autoFocus
-            disabled={isLoading}
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="extraInstructions" className="block text-sm font-medium text-gray-700 mb-2">
-            Extra Instructions (optional):
-          </label>
-          <textarea
-            id="extraInstructions"
-            value={extraInstructions}
-            onChange={(e) => setExtraInstructions(e.target.value)}
-            placeholder="e.g., Make questions easy, focus on modern history, include fun facts..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            rows={3}
             disabled={isLoading}
           />
         </div>

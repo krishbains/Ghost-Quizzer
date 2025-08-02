@@ -5,10 +5,31 @@ import React, { useState, useEffect } from 'react'
 import QuizResults from './QuizResults'
 import QuizTimer from './QuizTimer'
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
+interface Player {
+  playerId: string;
+  name: string;
+  isHost: boolean;
+  score: number;
+}
+
 interface QuizBoardProps {
   roomCode: string;
   isHost: boolean;
-  quizData?: any;
+  quizData?: QuizData | null;
   onExitQuiz?: () => void;
 }
 
@@ -20,7 +41,7 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(true);
-  const [finalPlayers, setFinalPlayers] = useState<any[]>([]);
+  const [finalPlayers, setFinalPlayers] = useState<Player[]>([]);
 
   // Use provided quiz data or fall back to default (first quiz in the array)
   const quizData = propQuizData || defaultQuizData[0];

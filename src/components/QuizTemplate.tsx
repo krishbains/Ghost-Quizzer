@@ -1,11 +1,25 @@
 import React from 'react';
 import { quizData } from '@/data/quizData';
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
 interface QuizTemplateProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectQuiz: (quizTitle: string, quizData: any) => void;
-  aiGeneratedQuiz?: any; // AI-generated quiz data
+  onSelectQuiz: (quizTitle: string, quizData: QuizData) => void;
+  aiGeneratedQuiz?: QuizData | null; // AI-generated quiz data
 }
 
 const QuizTemplate: React.FC<QuizTemplateProps> = ({ isOpen, onClose, onSelectQuiz, aiGeneratedQuiz }) => {

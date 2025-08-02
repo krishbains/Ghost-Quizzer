@@ -8,7 +8,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [playerName, setPlayerName] = useState('');
-  const [recentRooms, setRecentRooms] = useState([
+  const [recentRooms] = useState([
     { id: 1, code: 'ABC123', title: 'Science Quiz', participants: 8, date: '2024-01-15' },
     { id: 2, code: 'XYZ789', title: 'History Quiz', participants: 12, date: '2024-01-14' },
     { id: 3, code: 'DEF456', title: 'Math Quiz', participants: 6, date: '2024-01-13' },
@@ -213,7 +213,7 @@ export default function Dashboard() {
         >
           <div className="backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl px-8 py-4">
             <div className="text-white/60 text-sm">
-              Ready to create the next viral quiz? Let's make learning fun! 🚀
+              Ready to create the next viral quiz? Let&apos;s make learning fun! 🚀
             </div>
           </div>
         </motion.footer>

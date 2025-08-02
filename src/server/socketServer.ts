@@ -9,6 +9,20 @@ const io = new Server(server, {
   },
 })
 
+interface QuizData {
+  id: string;
+  title: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: Array<{
+      id: string;
+      text: string;
+    }>;
+    correctOptionId: string;
+  }>;
+}
+
 interface Player {
   playerId: string;
   name: string;
@@ -26,7 +40,7 @@ interface Room {
   currentQuestion: number;
   answers: Answer[];
   showAnswer: boolean;
-  quizData?: any; // Add quiz data to room
+  quizData?: QuizData; // Add quiz data to room
 }
 
 const rooms: { [roomCode: string]: Room } = {}
@@ -84,7 +98,7 @@ io.on("connection", (socket) => {
 
   socket.on("quiz-start", (data) => {
     let roomCode: string;
-    let quizData: any = null;
+    let quizData: QuizData | null = null;
     
     // Handle both string (roomCode) and object ({ roomCode, quizData }) formats
     if (typeof data === 'string') {
