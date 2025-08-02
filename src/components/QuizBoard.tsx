@@ -98,54 +98,41 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
 
   function handleAnswer(selectedId: string) {
     if (submitted || showAnswer || quizEnded) return // Prevent further answers after submission, reveal, or quiz end
-    const question = quizData.questions[currentQuestionIndex]
-    socket.emit('submit-answer', { roomCode, questionId: question.id, optionId: selectedId, correctOptionId: question.correctOptionId })
+
     setSubmitted(true)
+    socket.emit("submit-answer", { roomCode, selectedId })
   }
 
   function handleRevealToggle() {
-    if (quizEnded) return // Don't allow reveal toggle after quiz ends
-    const newVisibility = !showAnswer;
-    setShowAnswer(newVisibility);
-    if (newVisibility) setSubmitted(false); // Clear submitted message
-    socket.emit("toggle-answer-visibility", { roomCode, visible: newVisibility })
-    console.log("Emitting reveal-scores for roomCode:", roomCode);
-    socket.emit("reveal-scores", { roomCode });
-    console.log("scores were revealed")
+    setShowAnswer(!showAnswer)
+    socket.emit("toggle-answer-visibility", { roomCode, visible: !showAnswer })
   }
 
   function handleChangeQuestion(newIndex: number) {
-    if (quizEnded) return // Don't allow question changes after quiz ends
-    setCurrentQuestionIndex(newIndex);
-    setSubmitted(false);
-    setShowAnswer(false);
-    setTimeLeft(30);
-    setTimerActive(true);
-    socket.emit("change-question", { roomCode, questionIndex: newIndex });
+    setCurrentQuestionIndex(newIndex)
+    setSubmitted(false)
+    setShowAnswer(false)
+    setTimeLeft(30)
+    setTimerActive(true)
+    socket.emit("change-question", { roomCode, questionIndex: newIndex })
   }
 
   function handleEndQuiz() {
-    console.log("Ending quiz")
-    setQuizEnded(true)
-    setShowResults(true)
-    setTimerActive(false)
-    socket.emit("end-quiz", { roomCode });
-    // Reveal final scores
-    socket.emit("reveal-scores", { roomCode });
+    socket.emit("end-quiz", { roomCode })
   }
 
   function handleExitQuiz() {
     if (onExitQuiz) {
-      onExitQuiz();
+      onExitQuiz()
     }
   }
 
   function handleTimeUp() {
-    // Timer ran out, reveal answers
-    setShowAnswer(true);
-    setSubmitted(false);
-    socket.emit("toggle-answer-visibility", { roomCode, visible: true });
-    socket.emit("reveal-scores", { roomCode });
+    setTimerActive(false)
+    if (isHost) {
+      setShowAnswer(true)
+      socket.emit("toggle-answer-visibility", { roomCode, visible: true })
+    }
   }
 
   function handleTick() {
@@ -164,8 +151,8 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
   }
 
   return (
-    <div className='pl-10 pr-10 pt-5'>
-      <div className='border-2 shadow-xl border-b-6 border-r-6 border-black p-10 rounded-md bg-yellow-50 relative'>
+    <div className='px-4 sm:px-10 pt-3 sm:pt-5'>
+      <div className='border-2 shadow-xl border-b-6 border-r-6 border-black p-4 sm:p-10 rounded-md bg-yellow-50 relative'>
         {/* Circular Timer */}
         <QuizTimer 
           timeLeft={timeLeft}
@@ -174,23 +161,23 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
           onTick={handleTick}
         />
 
-        <h2 className='border-2 border-black text-center font-bold bg-red-200 max-w-md mx-auto'>{quizData.title}</h2>
+        <h2 className='border-2 border-black text-center font-bold bg-red-200 max-w-md mx-auto text-sm sm:text-base px-2 py-1 sm:px-4 sm:py-2'>{quizData.title}</h2>
         <div>
-          <h2>Question: {currentQuestionIndex + 1}</h2>
+          <h2 className='text-sm sm:text-base font-semibold mt-2 sm:mt-4'>Question: {currentQuestionIndex + 1}</h2>
         </div>
         <div className='flex justify-center'>
           <div className='w-full'>
-            <h3 className='mt-8 text-center'>{currentQuestion.text}</h3>
+            <h3 className='mt-4 sm:mt-8 text-center text-sm sm:text-base px-2'>{currentQuestion.text}</h3>
 
             {(showAnswer || !submitted) && (
-              <ul className='grid grid-cols-2 gap-5 mt-10 mb-5'>
+              <ul className='grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 mt-6 sm:mt-10 mb-3 sm:mb-5'>
                 {currentQuestion.options.map((option: { id: string; text: string }) => {
                   const isCorrect = option.id === currentQuestion.correctOptionId;
                   const revealClass = showAnswer && isCorrect ? 'bg-green-300' : 'bg-amber-400';
                   return (
-                    <li key={option.id} className="h-24">
+                    <li key={option.id} className="h-16 sm:h-24">
                       <button
-                        className={`border border-black shadow-xl border-b-3 border-r-3 rounded-md w-full h-full flex items-center justify-center ${revealClass} ${submitted || showAnswer ? 'cursor-not-allowed opacity-60' : 'hover:bg-amber-500'}`}
+                        className={`border border-black shadow-xl border-b-3 border-r-3 rounded-md w-full h-full flex items-center justify-center ${revealClass} ${submitted || showAnswer ? 'cursor-not-allowed opacity-60' : 'hover:bg-amber-500'} text-xs sm:text-sm px-2 sm:px-4`}
                         onClick={() => handleAnswer(option.id)}
                         disabled={submitted || showAnswer}
                       >
@@ -203,22 +190,22 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
             )}
 
             {submitted && !showAnswer && (
-              <h2 className='text-center mt-5 font-bold'>Submitted!</h2>
+              <h2 className='text-center mt-3 sm:mt-5 font-bold text-sm sm:text-base'>Submitted!</h2>
             )}
 
             {isHost && (
               <div>
                 <div className='text-center'>
                   <button
-                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600 min-w-22 mt-10'
+                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600 min-w-20 sm:min-w-22 mt-6 sm:mt-10 text-xs sm:text-sm'
                     onClick={handleRevealToggle}
                   >
                     {showAnswer ? 'Hide' : 'Reveal'}
                   </button>
                 </div>
-                <div className='flex justify-center gap-10 mt-5'>
+                <div className='flex flex-col sm:flex-row justify-center gap-3 sm:gap-10 mt-3 sm:mt-5'>
                   <button
-                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600'
+                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600 text-xs sm:text-sm'
                     onClick={() => {
                       if (currentQuestionIndex > 0) {
                         handleChangeQuestion(currentQuestionIndex - 1);
@@ -229,7 +216,7 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
                   </button>
                   {currentQuestionIndex < quizData.questions.length - 1 && (
                   <button
-                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600'
+                    className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600 text-xs sm:text-sm'
                     onClick={() => {
                       if (currentQuestionIndex < quizData.questions.length - 1) {
                         handleChangeQuestion(currentQuestionIndex + 1);
@@ -240,7 +227,7 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
                   </button>)}
                   {currentQuestionIndex === quizData.questions.length - 1 && (
                     <button
-                      className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600'
+                      className='bg-slate-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-slate-600 text-xs sm:text-sm'
                       onClick={handleEndQuiz}
                     >
                       End Quiz
@@ -248,7 +235,7 @@ const QuizBoard = ({ roomCode, isHost, quizData: propQuizData, onExitQuiz }: Qui
                   )}
                   <button
                     onClick={handleExitQuiz}
-                    className='bg-red-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-red-600 text-white'
+                    className='bg-red-500 border border-black border-b-3 border-r-3 p-2 rounded-md hover:bg-red-600 text-white text-xs sm:text-sm'
                   >
                     Exit Quiz
                   </button>

@@ -32,28 +32,31 @@ const QuizTimer = ({ timeLeft, timerActive, onTimeUp, onTick }: QuizTimerProps) 
 
   // Calculate timer progress for circular display
   const timerProgress = (timeLeft / 30) * 100;
-  const circumference = 2 * Math.PI * 45; // radius = 45
+  const radius = typeof window !== 'undefined' && window.innerWidth < 640 ? 30 : 45;
+  const circumference = 2 * Math.PI * radius;
   const strokeDasharray = circumference;
   const strokeDashoffset = circumference - (timerProgress / 100) * circumference;
+  const size = typeof window !== 'undefined' && window.innerWidth < 640 ? 64 : 96;
+  const center = size / 2;
 
   return (
-    <div className="absolute top-4 right-4">
-      <svg className="w-24 h-24 transform -rotate-90">
+    <div className="absolute top-2 sm:top-4 right-2 sm:right-4">
+      <svg className={`w-16 h-16 sm:w-24 sm:h-24 transform -rotate-90`}>
         <circle
-          cx="48"
-          cy="48"
-          r="45"
+          cx={center}
+          cy={center}
+          r={radius}
           stroke="currentColor"
-          strokeWidth="4"
+          strokeWidth="3"
           fill="transparent"
           className="text-gray-300"
         />
         <circle
-          cx="48"
-          cy="48"
-          r="45"
+          cx={center}
+          cy={center}
+          r={radius}
           stroke="currentColor"
-          strokeWidth="4"
+          strokeWidth="3"
           fill="transparent"
           strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
@@ -63,7 +66,7 @@ const QuizTimer = ({ timeLeft, timerActive, onTimeUp, onTick }: QuizTimerProps) 
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`text-lg font-bold ${
+        <span className={`text-sm sm:text-lg font-bold ${
           timeLeft <= 10 ? 'text-red-600' : timeLeft <= 20 ? 'text-yellow-600' : 'text-green-600'
         }`}>
           {timeLeft}s

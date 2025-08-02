@@ -125,18 +125,18 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="bg-white rounded-lg p-6 w-96 max-w-[90vw]">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Ask AI for Quiz Topic</h2>
+    <div className="bg-white rounded-lg p-4 sm:p-6 w-80 sm:w-96 max-w-[90vw]">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <h2 className="text-lg sm:text-xl font-bold">Ask AI for Quiz Topic</h2>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+          className="text-gray-500 hover:text-gray-700 text-xl sm:text-2xl font-bold"
         >
           ×
         </button>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <div>
           <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
             Enter a topic for AI-generated quiz:
@@ -148,16 +148,16 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
             onChange={(e) => setTopic(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="e.g., Ancient Egypt, Space Exploration, Cooking..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
             autoFocus
             disabled={isLoading}
           />
         </div>
         
-        <div className="flex justify-end space-x-3">
+        <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-3 sm:px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
             disabled={isLoading}
           >
             Cancel
@@ -165,7 +165,7 @@ const AskAI: React.FC<AskAIProps> = ({ isOpen, onClose, onSubmit }) => {
           <button
             onClick={handleSubmit}
             disabled={!topic.trim() || isLoading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
           >
             {isLoading ? 'Generating...' : 'Generate Quiz'}
           </button>
