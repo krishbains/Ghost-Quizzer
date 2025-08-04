@@ -244,7 +244,7 @@ The Socket.IO server has been deployed to:
 
 ---
 
-<div align="center">
+<!-- <div align="center">
   <p>Made with ❤️ by the GhostQuizzer Team</p>
   <p>
     <a href="https://github.com/yourusername/GhostQuizzer/stargazers">
@@ -257,4 +257,4 @@ The Socket.IO server has been deployed to:
       <img src="https://img.shields.io/github/issues/yourusername/GhostQuizzer" alt="Issues"/>
     </a>
   </p>
-</div>
+</div> -->
