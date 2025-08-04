@@ -13,7 +13,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"/>
   <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge" alt="Status"/>
-  <img src="https://img.shields.io/netlify/:af4302ae-e47e-4af4-8d3b-626bc0e56175" alt="Deployment"/>
+  <img src="https://img.shields.io/netlify/af4302ae-e47e-4af4-8d3b-626bc0e56175" alt="Deployment"/>
 </div>
 
 ---
