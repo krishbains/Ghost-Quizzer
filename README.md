@@ -13,7 +13,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License"/>
   <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge" alt="Status"/>
-  <img src="https://img.shields.io/badge/Deployment-Vercel-blue?style=for-the-badge&logo=vercel" alt="Deployment"/>
+  <img src="https://img.shields.io/netlify/:projectId" alt="Deployment"/>
 </div>
 
 ---
